@@ -30,7 +30,21 @@ class VanillaSEO extends Gdn_Plugin
 		'my_discussions' 			=>	'MY Collegiate Talk is awesome!',
 		'all_categories'			=>	'ALL CAT',
 		'single_category' 			=>	'SINGLE_CAT',
-		'page_category' 			=>	'PAGE_CAT'
+		'page_category' 			=>	'PAGE_CAT',
+		
+		// CATEGORIES
+		'categories_all'			=>	'ALL_CAT',
+		'category_single'			=>	'SINGLE_CAT',
+		'category_paged'			=>	'PAGED_CAT',
+		'category_discussions'		=>	'CAT_DISCUSSIONS',
+		
+		// DISCUSSIONS
+		
+		
+		// TAGS
+		
+		// OTHER PAGES
+		'activity'					=> 'SHOW ACTIVITY'
 	);
 	
 	public function SettingsController_Render_Before($Sender)
@@ -47,10 +61,26 @@ class VanillaSEO extends Gdn_Plugin
 		switch ( Gdn::Dispatcher()->ControllerMethod() )
 		{
 			case 'all':
-				$type = 'all_categories';
+				$type = 'categories_all';
+				break;
+			default:
+				if ( isset($Sender->Data['Category']) )
+				{
+					$type = 'category_single';
+					$data['category'] = $Sender->Category->Name;
+				}
+				else
+				{
+					$type = 'category_discussions';
+				}
 				break;
 		}
 		$this->ParseTitle($Sender, $data, $type);
+	}
+	
+	public function ActivityController_Render_Before ( $Sender )
+	{
+		$this->ParseTitle($Sender, '', 'activity');
 	}
 	
 	public function DiscussionsController_Render_Before ( $Sender )
