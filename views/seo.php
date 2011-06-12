@@ -13,10 +13,16 @@
 
 <?php echo $this->Form->Open(); ?>
 
-<?php echo $this->Form->Errors(); var_dump($$Fields); ?>
+<?php echo $this->Form->Errors(); ?>
 <ul>
-	<?php foreach ( $Fields as $field ) : ?>
-	<li><?php echo $field['name']; ?></li>
+	<?php foreach ( $this->DynamicTitles as $field => $title ) : ?>
+	<li>
+		<?php
+			echo $this->Form->Label($title['name']);
+			echo Wrap(T($title['info']), 'div', array('class' => 'Info'));
+			echo $this->Form->Input($field);
+		?>
+	</li>
 	<?php endforeach; ?>
 </ul>
 <?php echo $this->Form->Close(); ?>

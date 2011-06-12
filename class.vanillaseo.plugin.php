@@ -19,7 +19,7 @@ class VanillaSEOPlugin extends Gdn_Plugin
 	private $tags = array ( 'discussion', 'category', 'garden', 'page' );
 	
 	// Default titles for each part of the vanilla rewrite scheme.
-	public $fields = array (
+	public $dynamic_titles = array (
 		
 		// CATEGORIES
 		'categories_all'			=>	array(
@@ -76,12 +76,15 @@ class VanillaSEOPlugin extends Gdn_Plugin
 		$Sender->AddSideMenu('plugin/seo');
 		
 		$Sender->Form = new Gdn_Form();
+		
+		
+		
 		$this->Dispatch($Sender, $Sender->RequestArgs);
 	}
 	
 	public function Controller_Index ( $Sender )
 	{
-		$Sender->SetData('fields', $this->fields);;
+		$Sender->DynamicTitles = $this->dynamic_titles;
 		$Sender->Render($this->GetView('seo.php'));
 	}
 	
