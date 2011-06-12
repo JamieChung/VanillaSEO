@@ -1,32 +1,36 @@
 <?php
 
-$PluginInfo['VanillaSEO'] = array
-(
- 	'Name' 				=>	'Vanilla SEO',
+$PluginInfo['VanillaSEO'] = array (
+ 	'Name' 					=>	'Vanilla SEO',
 	'Description'			=>	T('Vanilla SEO is your all in one plugin for optimizing your Vanilla forum for search engines.'),
 	'Version'				=>	'0.1',
 	'RequiredPlugins'		=>	FALSE,
-	'HasLocale'			=>	FALSE,
+	'HasLocale'				=>	FALSE,
 	'SettingsUrl'			=>	FALSE,
 	'SettingsPermission'	=>	FALSE,
 	'Author'				=>	'Jamie Chung',
 	'AuthorEmail'			=>	'me@jamiechung.me',
-	'AuthorUrl'			=>	'http://www.jamiechung.me'
+	'AuthorUrl'				=>	'http://www.jamiechung.me'
 );
 
 class VanillaSEO extends Gdn_Plugin 
 {
-	private $tags = array ( 'discussion', 'category', 'garden', 'page');
-	private $titles = array(
-		'single_discussion' => '%discussion% - %category% on %garden_title%',
-		'page_discussion' => '%discussion% - Page %page% - %category% on %garden_title%,',
-		'page_discussion' => '%discussion% - %category% on Page %page% of %garden_title%',
-		'single_tag' => '',
-		'page_tag' => '',
-		'home_discussions' => 'Collegiate Talk is awesome!',
-		'my_discussions' => 'MY Collegiate Talk is awesome!',
-		'single_category' => '',
-		'page_category' => ''
+	// All available %tags%.
+	private $tags = array ( 'discussion', 'category', 'garden', 'page' );
+	
+	// Default titles for each part of the vanilla rewrite scheme.
+	private $titles = array (
+		'single_discussion' 		=>	'%discussion% - %category% on %garden_title%',
+		'page_discussion' 			=>	'%discussion% - Page %page% - %category% on %garden_title%,',
+		'page_discussion' 			=>	'%discussion% - %category% on Page %page% of %garden_title%',
+		'single_tag' 				=>	'',
+		'page_tag' 					=>	'',
+		'home_discussions'			=>	'HOME Collegiate Talk is awesome!',
+		'bookmarked_discussions'	=>	'BOOKMARKED',
+		'my_discussions' 			=>	'MY Collegiate Talk is awesome!',
+		'all_categories'			=>	'ALL CAT',
+		'single_category' 			=>	'SINGLE_CAT',
+		'page_category' 			=>	'PAGE_CAT'
 	);
 	
 	public function SettingsController_Render_Before($Sender)
@@ -37,6 +41,18 @@ class VanillaSEO extends Gdn_Plugin
 		}
 	}
 	
+	public function CategoriesController_Render_Before ( $Sender )
+	{
+		$data = array();
+		switch ( Gdn::Dispatcher()->ControllerMethod() )
+		{
+			case 'all':
+				$type = 'all_categories';
+				break;
+		}
+		$this->ParseTitle($Sender, $data, $type);
+	}
+	
 	public function DiscussionsController_Render_Before ( $Sender )
 	{
 		$data = array();
@@ -45,8 +61,11 @@ class VanillaSEO extends Gdn_Plugin
 			case 'mine':
 				$type = 'my_discussions';
 				break;
-				
-			default:
+			case 'bookmarked':
+				$type = 'bookmarked_discussions';		
+				break;
+			
+			case 'index':
 				$type = 'home_discussions';
 				break;
 		}
