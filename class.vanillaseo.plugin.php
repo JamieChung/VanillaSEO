@@ -62,6 +62,18 @@ class VanillaSEOPlugin extends Gdn_Plugin
  * 
  */
 
+ 	public function GetTitle ( $type )
+	{
+		if ( C('Plugin.SEO.'.$type) )
+		{
+			return C('Plugin.SEO.'.$type);
+		}
+		else
+		{
+			return $this->dynamic_titles[$type]['default'];
+		}
+	}
+ 	
 	public function Base_GetAppSettingsMenuItems_Handler ( $Sender )
 	{
 		$Menu = $Sender->EventArguments['SideMenu'];
@@ -77,14 +89,26 @@ class VanillaSEOPlugin extends Gdn_Plugin
 		
 		$Sender->Form = new Gdn_Form();
 		
-		
-		
 		$this->Dispatch($Sender, $Sender->RequestArgs);
 	}
 	
 	public function Controller_Index ( $Sender )
 	{
 		$Sender->DynamicTitles = $this->dynamic_titles;
+		
+		if ( $Sender->Form->AuthenticatedPostBack() === TRUE )
+		{
+			foreach ( $this->dynamic_titles as $field => $info )
+			{
+				SaveToConfig('Plugins.SEO.DynamicTitles'.$field, TRUE);
+			}
+		}
+		
+		foreach ( $this->dynamic_titles as $field => $info )
+		{
+			$Sender->Form->SetFormValue($field, $this->GetTitle($field));
+		}
+				
 		$Sender->Render($this->GetView('seo.php'));
 	}
 	

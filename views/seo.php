@@ -18,11 +18,11 @@
 	<?php foreach ( $this->DynamicTitles as $field => $title ) : ?>
 	<li>
 		<?php
-			echo $this->Form->Label($title['name']);
+			echo $this->Form->Label($title['name'], $field);
 			echo Wrap(T($title['info']), 'div', array('class' => 'Info'));
 			echo $this->Form->Input($field);
 		?>
 	</li>
 	<?php endforeach; ?>
 </ul>
-<?php echo $this->Form->Close(); ?>
+<?php echo $this->Form->Close('Save'); ?>
