@@ -30,7 +30,7 @@ class VanillaSEOPlugin extends Gdn_Plugin
 		),
 		'category_single'		=>	array(
 					'default' 	=> 'ALL_CAT',
-					'fields'	=> array('garden'),
+					'fields'	=> array('garden', 'category'),
 					'name'		=> 'Single-Paged Category',
 					'info'		=> 'First page of a category view.'
 		),
@@ -82,9 +82,9 @@ class VanillaSEOPlugin extends Gdn_Plugin
 
  	public function GetTitle ( $type )
 	{
-		if ( C('Plugins.SEO.'.$type) )
+		if ( C('Plugins.SEO.DynamicTitles.'.$type) )
 		{
-			return C('Plugins.SEO.'.$type);
+			return C('Plugins.SEO.DynamicTitles.'.$type);
 		}
 		else
 		{
@@ -120,15 +120,17 @@ class VanillaSEOPlugin extends Gdn_Plugin
 			{
 				foreach ( $this->dynamic_titles as $field => $info )
 				{
-					SaveToConfig('Plugins.SEO.DynamicTitles.'.$field, TRUE);
+					SaveToConfig('Plugins.SEO.DynamicTitles.'.$field, $Sender->Form->GetValue($field));
 				}
+				
+				$Sender->StatusMessage = T('Your settings have been saved.');
 			}
-
+			
 			foreach ( $this->dynamic_titles as $field => $info )
 			{
 				$Sender->Form->SetFormValue($field, $this->GetTitle($field));
 			}
-
+			
 		}
 			
 		$Sender->Render($this->GetView('seo.php'));
@@ -151,14 +153,6 @@ class VanillaSEOPlugin extends Gdn_Plugin
 		redirect('plugin/seo');
 	}
 	
-	public function SettingsController_Render_Before($Sender)
-	{
-		if (Gdn::Dispatcher()->Application() == 'vanilla' && Gdn::Dispatcher()->ControllerMethod() == 'addcategory')
-		{
-			
-		}
-	}
-	
 	public function CategoriesController_Render_Before ( $Sender )
 	{
 		$data = array();
@@ -179,6 +173,7 @@ class VanillaSEOPlugin extends Gdn_Plugin
 				}
 				break;
 		}
+		
 		$this->ParseTitle($Sender, $data, $type);
 	}
 	
@@ -208,20 +203,35 @@ class VanillaSEOPlugin extends Gdn_Plugin
 	
 	private function ParseTitle ( &$Sender, $data, $type )
 	{
-		if ( !isset($this->titles[$type]) )
+		if ( !isset($this->dynamic_titles[$type]) )
 			return;
 		
-		$title = $this->titles[$type];
-		foreach ( array_keys($data) as $field )
+		$dynamic = $this->dynamic_titles[$type];
+		$title = $this->GetTitle($type);
+		
+		if ( !isset($data['garden']) )
 		{
-			$title = str_replace('%'.$field.'%', $data[$field], $title);
+			$data['garden'] = C('Garden.Title');
+		}
+		
+		foreach ( $dynamic['fields'] as $field )
+		{
+			$title = str_replace('%'.$field.'%', isset($data[$field]) ? $data[$field] : '', $title);
 		}
 		
 		$Sender->Head->Title($title);
 	}
 	
+	public function Enabled ()
+	{
+		return ( C('Plugins.SEO.Enabled') == TRUE );
+	}
+	
 	public function DiscussionController_Render_Before ( $Sender )
 	{
+		if ( !$this->Enabled() )
+			return;
+			
 		$tags = array();
 		
 		// Check if we have tags from current discussion.

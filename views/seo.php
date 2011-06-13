@@ -18,10 +18,16 @@
 	<li>
 		<?php
 			echo $this->Form->Label($title['name'], $field);
-			echo Wrap(T($title['info']), 'div', array('class' => 'Info'));
-			echo $this->Form->Input($field);
+			echo Wrap(
+					T($title['info'].
+					'<br />&mdash; Allowed tags: %'.implode('%, %', $title['fields']).
+					'%'),
+					'div',
+					array('class' => 'Info'));
+			echo $this->Form->Input($field, 'text');
 		?>
 	</li>
+	<li> &nbsp; </li>
 	<?php endforeach; ?>
 </ul>
 <?php echo $this->Form->Close('Save'); ?>
