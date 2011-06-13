@@ -22,11 +22,29 @@ class VanillaSEOPlugin extends Gdn_Plugin
 	public $dynamic_titles = array (
 		
 		// CATEGORIES
-		'categories_all'			=>	array(
-			'default' 	=> 'ALL_CAT',
-			'fields'	=> array('garden'),
-			'name'		=> 'All Categories',
-			'info'		=> 'Page where all categories are.'
+		'categories_all'		=>	array(
+					'default' 	=> 'ALL_CAT',
+					'fields'	=> array('garden'),
+					'name'		=> 'All Categories',
+					'info'		=> 'Page where all categories are.'
+		),
+		'category_single'		=>	array(
+					'default' 	=> 'ALL_CAT',
+					'fields'	=> array('garden'),
+					'name'		=> 'Single-Paged Category',
+					'info'		=> 'First page of a category view.'
+		),
+		'category_paged'		=>	array(
+					'default' 	=> 'ALL_CAT',
+					'fields'	=> array('garden'),
+					'name'		=> 'Paged Category',
+					'info'		=> 'Viewing discussions on additional pages of gategories.'
+		),
+		'category_discussions'	=>	array(
+					'default' 	=> 'ALL_CAT',
+					'fields'	=> array('garden'),
+					'name'		=> 'All Categories',
+					'info'		=> 'Showing all categories and a few discussions from each category.'
 		),
 	);
 
@@ -64,9 +82,9 @@ class VanillaSEOPlugin extends Gdn_Plugin
 
  	public function GetTitle ( $type )
 	{
-		if ( C('Plugin.SEO.'.$type) )
+		if ( C('Plugins.SEO.'.$type) )
 		{
-			return C('Plugin.SEO.'.$type);
+			return C('Plugins.SEO.'.$type);
 		}
 		else
 		{
@@ -96,19 +114,23 @@ class VanillaSEOPlugin extends Gdn_Plugin
 	{
 		$Sender->DynamicTitles = $this->dynamic_titles;
 		
-		if ( $Sender->Form->AuthenticatedPostBack() === TRUE )
+		if ( C('Plugins.SEO.Enabled') )
 		{
+			if ( $Sender->Form->AuthenticatedPostBack() === TRUE )
+			{
+				foreach ( $this->dynamic_titles as $field => $info )
+				{
+					SaveToConfig('Plugins.SEO.DynamicTitles.'.$field, TRUE);
+				}
+			}
+
 			foreach ( $this->dynamic_titles as $field => $info )
 			{
-				SaveToConfig('Plugins.SEO.DynamicTitles'.$field, TRUE);
+				$Sender->Form->SetFormValue($field, $this->GetTitle($field));
 			}
+
 		}
-		
-		foreach ( $this->dynamic_titles as $field => $info )
-		{
-			$Sender->Form->SetFormValue($field, $this->GetTitle($field));
-		}
-				
+			
 		$Sender->Render($this->GetView('seo.php'));
 	}
 	

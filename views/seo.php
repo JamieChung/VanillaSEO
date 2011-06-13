@@ -9,7 +9,6 @@
 </div>
 <?php if ( C('Plugins.SEO.Enabled') ) : ?>
 <h3><?php echo T('Dynamic Page Titles'); ?></h3>
-<?php endif; ?>
 
 <?php echo $this->Form->Open(); ?>
 
@@ -26,3 +25,5 @@
 	<?php endforeach; ?>
 </ul>
 <?php echo $this->Form->Close('Save'); ?>
+
+<?php endif; ?>
