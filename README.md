@@ -5,12 +5,17 @@ Latest Version: 0.1 (June.14.2011)
 -----------
 
 Take back control of your Vanilla's SEO with VanillaSEO.
+
 Edit page titles in order to provide your visitors better information about what is being displayed.
+
 No more generic and plain page title's on your Vanilla Forum.
+
 Add keywords to your page title's to get better results from Search Engines.
+
 Support for "Tagging" and will add to meta keywords automatically. (Needs to have "Tagging" installed and enabled.)
 
 Edit page titles for the following:
+-----------
 - Category Listings
 - Discussion Listings
 - Discussion Threads
@@ -39,6 +44,8 @@ Get support on twitter: http://www.twitter.com/jamiechung
 ChangeLog
 -----------
 0.1 (June.14.2011)
+-----------
+- Initial Public Release
 - Default titles provided for multiple types of pages (discussions, category, home discussion, activity).
 - Administration interface to enable/disable plugin's use.
 - Users know which tags to use in the appropriate field and their meanings.
