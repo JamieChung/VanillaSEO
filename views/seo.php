@@ -12,7 +12,7 @@
 <h3><?php echo T('Dynamic Page Titles'); ?></h3>
 
 <ul>
-	<li id="CaptchaSettings">
+	<li>
       <div class="Info"><?php echo T('This is a list of all the possible tags and their relative descriptions.'); ?></div>
       <table class="Label AltColumns">
          <tbody>
@@ -35,22 +35,37 @@
 
 <?php echo $this->Form->Errors(); ?>
 <ul>
-	<?php foreach ( $this->DynamicTitles as $field => $title ) : ?>
 	<li>
+      <table class="Label AltColumns">
+      	
+      	<thead>
+            <tr>
+               <th><?php echo T('Dynamic Page Title'); ?></th>
+               <th>Custom Title</th>
+               <th>Parsed Tags &amp; Examples</th>
+               <th>Plugin Default</th>
+            </tr>
+         </thead>
+         <tbody>
+
+
+	<?php foreach ( $this->DynamicTitles as $field => $title ) : ?>
+	<tr>
 		<?php
-			echo $this->Form->Label($title['name'], $field);
-			echo Wrap(
-					T($title['info'].
-					'<br />&mdash; Allowed tags: <strong>%'.implode('%</strong> | <strong>%', $title['fields']).'</strong>'.
-					'%'.
-					'<br />&mdash; Example URL: <strong>'.implode('</strong>, <strong>', $title['examples']).'</strong>'),
-					'div',
+			echo Wrap($this->Form->Label($title['name'], $field).
+						'<br />'.T($title['info']), 'td');
+			echo Wrap($this->Form->Input($field, 'text').'<br /><br />Allowed Tags: <br /><strong>%'.implode('%</strong> <strong>%', $title['fields']).'%</strong>', 'td', array('class' => 'Info'));
+			echo Wrap(T('Example URL: <br /><strong>'.implode('</strong> <br /><strong>', $title['examples']).'</strong>'),
+					'td',
 					array('class' => 'Info'));
-			echo $this->Form->Input($field, 'text');
+			echo Wrap(T($title['default']), 'td');
 		?>
-	</li>
-	<li> &nbsp; </li>
+	</tr>
 	<?php endforeach; ?>
+
+         </tbody>
+       </table>
+   </li>
 </ul>
 <?php echo $this->Form->Close('Save'); ?>
 

@@ -75,7 +75,7 @@ class VanillaSEOPlugin extends Gdn_Plugin
 	{
 		if ( C('Plugins.SEO.DynamicTitles.'.$type) )
 		{
-			return stripslashes(strip_tags(C('Plugins.SEO.DynamicTitles.'.$type)));
+			return stripslashes(strip_tags(base64_decode(C('Plugins.SEO.DynamicTitles.'.$type))));
 		}
 		else
 		{
@@ -113,7 +113,7 @@ class VanillaSEOPlugin extends Gdn_Plugin
 			{
 				foreach ( $this->dynamic_titles as $field => $info )
 				{
-					SaveToConfig('Plugins.SEO.DynamicTitles.'.$field, htmlspecialchars(addslashes($Sender->Form->GetValue($field))));
+					SaveToConfig('Plugins.SEO.DynamicTitles.'.$field, base64_encode($Sender->Form->GetValue($field)));
 				}
 				
 				$Sender->StatusMessage = T('Your settings have been saved.');
