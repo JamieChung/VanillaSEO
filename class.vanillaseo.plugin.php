@@ -16,7 +16,7 @@ $PluginInfo['VanillaSEO'] = array (
 class VanillaSEOPlugin extends Gdn_Plugin 
 {
 	// All available %tags%.
-	private $tags = array ( 'discussion', 'category', 'garden', 'page' );
+	public $tags = array ( 'title' => 'Discussion Title', 'category' => 'Category Name', 'garden' => 'Vanilla Title' );
 	
 	// Default titles for each part of the vanilla rewrite scheme.
 	public $dynamic_titles = array (
@@ -36,34 +36,30 @@ class VanillaSEOPlugin extends Gdn_Plugin
 					'info'		=> 'Category view displaying relevent discussions.'
 					// Example: /categories/general-forum, /categories/general-forum/p2, /categories/general-forum/feed.rss
 		),
-		// 'category_paged'		=>	array(
-					// 'default' 	=> '%category% Discussions on Page %page of %garden%',
-					// 'fields'	=> array('garden', 'page'),
-					// 'name'		=> 'Paged Category',
-					// 'info'		=> 'Viewing discussions on additional pages of gategories.'
-		// ),
 		'category_discussions'	=>	array(
 					'default' 	=> 'View Discussions and Categories on %garden%',
 					'fields'	=> array('garden'),
 					'name'		=> 'Sample Categories',
 					'info'		=> 'Showing all categories and a few discussions from each category.'
 					// Example: /categories
-		),
+		),		
 		
+		// ACTIVITY
 		'activity'				=> array(
 					'default'	=> 'Recent Activity on %garden%',
 					'fields'	=> array('garden'),
 					'name'		=> 'Recent Activity',
 					'info'		=> 'Page listing recent activity on your vanilla forum.'
 					// Example:	/activity
-		),
+		),		
 		
+		// DISCUSSIONS
 		'discussions'			=> array(
 					'default'	=> 'Recent Discussions on %garden%',
 					'fields'	=> array('garden'),
 					'name'		=> 'Discussions Home Page',
 					'info'		=> 'Page listing recent discussions on your vanilla forum.'
-					// Example:	/activity
+					// Example:	/discussions
 		),
 		
 		'discussion_single'		=> array(
@@ -71,6 +67,7 @@ class VanillaSEOPlugin extends Gdn_Plugin
 					'fields'	=> array('garden', 'title', 'category'),
 					'name'		=> 'Single Discussion Page',
 					'info'		=> 'Viewing a single discussion thread.'
+					// Example: /discussions/23/this-is-a-post-title
 		)
 	);
 
@@ -106,6 +103,7 @@ class VanillaSEOPlugin extends Gdn_Plugin
 	
 	public function Controller_Index ( $Sender )
 	{
+		$Sender->Permission('Garden.Settings.Manage');
 		$Sender->DynamicTitles = $this->dynamic_titles;
 		
 		if ( $this->Enabled() )
@@ -147,10 +145,13 @@ class VanillaSEOPlugin extends Gdn_Plugin
 		redirect('plugin/seo');
 	}
 	
+	/**
+	 * We don't have a way to publically get the offset from the PagerModule.
+	 * Will go without for now.
 	public function PagerModule_GetOffset_Create ( $Sender )
 	{
 		return $Sender->Offset;
-	}
+	}*/
 	
 	public function CategoriesController_Render_Before ( $Sender )
 	{
@@ -206,6 +207,7 @@ class VanillaSEOPlugin extends Gdn_Plugin
 			*/
 			
 			case 'index':
+			default:
 				$type = 'discussions';
 				break;
 		}
@@ -225,6 +227,7 @@ class VanillaSEOPlugin extends Gdn_Plugin
 			$data['garden'] = C('Garden.Title');
 		}
 		
+		// Only parse the field allowed for this dynamic title.
 		foreach ( $dynamic['fields'] as $field )
 		{
 			$title = str_replace('%'.$field.'%', isset($data[$field]) ? $data[$field] : '', $title);
@@ -246,17 +249,20 @@ class VanillaSEOPlugin extends Gdn_Plugin
 		$tags = array();
 		
 		// Check if we have tags from current discussion.
-		if ( isset($Sender->Discussion->Tags) )
+		if ( C('Plugins.Tagging.Enabled') && isset($Sender->Discussion->Tags) )
 		{
 			$tags += explode(' ', $Sender->Discussion->Tags);
 		}
 		
 		// Calculate Page for Single discussion.
+		/*
+		 * No need for calculating pages since we aren't doing titles for multiple pages.
 		$Offset = (int) $Sender->Offset;
 		$Limit = (int) C('Vanilla.Comments.PerPage', 50);
 		$page = (int) PageNumber($Offset, $Limit);		
 		if ( $page <= 0 )
 			$page = 1;
+		*/
 		
 		array_walk($tags, 'strip_tags');
 		array_walk($tags, 'trim');
@@ -280,7 +286,7 @@ class VanillaSEOPlugin extends Gdn_Plugin
 	
 	public function Setup ()
 	{
-		
+		// We don't need to setup because we're awesome.	
 	}
 }
 
