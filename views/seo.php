@@ -8,7 +8,28 @@
 	?>
 </div>
 <?php if ( C('Plugins.SEO.Enabled') ) : ?>
+
 <h3><?php echo T('Dynamic Page Titles'); ?></h3>
+
+<ul>
+	<li id="CaptchaSettings">
+      <div class="Info"><?php echo T('This is a list of all the possible tags and their relative descriptions.'); ?></div>
+      <table class="Label AltColumns">
+         <tbody>
+<?php foreach ( $this->DynamicTitleTags as $field => $description ) : ?>
+
+			<tr class="Alt">
+               <th><?php echo T('%'.$field.'%'); ?></th>
+               <td class="Alt"><?php echo T($description); ?></td>
+            </tr>
+            
+<?php endforeach; ?>         	
+            
+         </tbody>
+       </table>
+   </li>
+</ul>
+
 
 <?php echo $this->Form->Open(); ?>
 
@@ -20,8 +41,9 @@
 			echo $this->Form->Label($title['name'], $field);
 			echo Wrap(
 					T($title['info'].
-					'<br />&mdash; Allowed tags: %'.implode('%, %', $title['fields']).
-					'%'),
+					'<br />&mdash; Allowed tags: <strong>%'.implode('%</strong> | <strong>%', $title['fields']).'</strong>'.
+					'%'.
+					'<br />&mdash; Example URL: <strong>'.implode('</strong>, <strong>', $title['examples']).'</strong>'),
 					'div',
 					array('class' => 'Info'));
 			echo $this->Form->Input($field, 'text');

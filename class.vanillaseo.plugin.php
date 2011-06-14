@@ -16,7 +16,7 @@ $PluginInfo['VanillaSEO'] = array (
 class VanillaSEOPlugin extends Gdn_Plugin 
 {
 	// All available %tags%.
-	public $tags = array ( 'title' => 'Discussion Title', 'category' => 'Category Name', 'garden' => 'Vanilla Title' );
+	public $tags = array ( 'title' => 'Discussion Title', 'category' => 'Category Name', 'garden' => 'Vanilla Banner Title' );
 	
 	// Default titles for each part of the vanilla rewrite scheme.
 	public $dynamic_titles = array (
@@ -26,13 +26,13 @@ class VanillaSEOPlugin extends Gdn_Plugin
 					'default' 	=> 'All Categories on %garden%',
 					'fields'	=> array('garden'),
 					'name'		=> 'All Categories',
-					'info'		=> 'Page where all categories are.',
+					'info'		=> 'List page of all the categories available for users to post discussions.',
 					'examples'	=> array('/categories/all')
 		),
 		'category_single'		=>	array(
 					'default' 	=> '%category% Discussions on %garden%',
 					'fields'	=> array('garden', 'category'),
-					'name'		=> 'Single Category page',
+					'name'		=> 'Single Category Page',
 					'info'		=> 'Category view displaying relevent discussions.',
 					'examples'	=> array('/categories/general-forum', '/categories/general-forum/p2', '/categories/general-forum/feed.rss')
 		),
@@ -105,6 +105,7 @@ class VanillaSEOPlugin extends Gdn_Plugin
 	{
 		$Sender->Permission('Garden.Settings.Manage');
 		$Sender->DynamicTitles = $this->dynamic_titles;
+		$Sender->DynamicTitleTags = $this->tags;
 		
 		if ( $this->Enabled() )
 		{
