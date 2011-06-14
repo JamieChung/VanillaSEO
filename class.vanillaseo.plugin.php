@@ -2,9 +2,9 @@
 
 $PluginInfo['VanillaSEO'] = array (
  	'Name'					=>	'Vanilla SEO',
-	'Description'			=>	T('Vanilla SEO is your all in one plugin for optimizing your Vanilla forum for search engines.'),
+	'Description'			=>	'Vanilla SEO is your all in one plugin for optimizing your Vanilla forum for search engines.',
 	'Version'				=>	'0.1',
-	'RequiredPlugins'		=>	FALSE,
+	'RequiredPlugins'		=>	array('Vanilla' => '>=2'),
 	'HasLocale'				=>	FALSE,
 	'SettingsUrl'			=>	'/dashboard/plugin/seo',
 	'SettingsPermission'	=>	'Garden.Settings.Manage',
@@ -65,41 +65,16 @@ class VanillaSEOPlugin extends Gdn_Plugin
 					'info'		=> 'Page listing recent discussions on your vanilla forum.'
 					// Example:	/activity
 		),
+		
+		'discussion_single'		=> array(
+					'default'	=> '%title% - %category% Discussions on %garden%',
+					'fields'	=> array('garden', 'title', 'category'),
+					'name'		=> 'Single Discussion Page',
+					'info'		=> 'Viewing a single discussion thread.'
+		)
 	);
 
-/*
- * 
- * Moving this array for the time being.
-		'single_discussion' 		=>	'%discussion% - %category% on %garden_title%',
-		'page_discussion' 			=>	'%discussion% - Page %page% - %category% on %garden_title%,',
-		'page_discussion' 			=>	'%discussion% - %category% on Page %page% of %garden_title%',
-		'single_tag' 				=>	'',
-		'page_tag' 					=>	'',
-		'home_discussions'			=>	'HOME Collegiate Talk is awesome!',
-		'bookmarked_discussions'	=>	'BOOKMARKED',
-		'my_discussions' 			=>	'MY Collegiate Talk is awesome!',
-		'all_categories'			=>	'ALL CAT',
-		'single_category' 			=>	'SINGLE_CAT',
-		'page_category' 			=>	'PAGE_CAT',
- * 
- * 
- * 
- * 
-		'category_single'			=>	'SINGLE_CAT',
-		'category_paged'			=>	'PAGED_CAT',
-		'category_discussions'		=>	'CAT_DISCUSSIONS',
-		
-		// DISCUSSIONS
-		
-		
-		// TAGS
-		
-		// OTHER PAGES
-		'activity'					=> 'SHOW ACTIVITY'
- * 
- */
-
- 	public function GetTitle ( $type )
+ 	private function GetTitle ( $type )
 	{
 		if ( C('Plugins.SEO.DynamicTitles.'.$type) )
 		{
@@ -133,7 +108,7 @@ class VanillaSEOPlugin extends Gdn_Plugin
 	{
 		$Sender->DynamicTitles = $this->dynamic_titles;
 		
-		if ( C('Plugins.SEO.Enabled') )
+		if ( $this->Enabled() )
 		{
 			if ( $Sender->Form->AuthenticatedPostBack() === TRUE )
 			{
@@ -179,6 +154,9 @@ class VanillaSEOPlugin extends Gdn_Plugin
 	
 	public function CategoriesController_Render_Before ( $Sender )
 	{
+		if ( !$this->Enabled() )
+			return;
+		
 		$data = array();
 		switch ( Gdn::Dispatcher()->ControllerMethod() )
 		{
@@ -203,11 +181,17 @@ class VanillaSEOPlugin extends Gdn_Plugin
 	
 	public function ActivityController_Render_Before ( $Sender )
 	{
+		if ( !$this->Enabled() )
+			return;
+		
 		$this->ParseTitle($Sender, '', 'activity');
 	}
 	
 	public function DiscussionsController_Render_Before ( $Sender )
 	{
+		if ( !$this->Enabled() )
+			return;
+		
 		$data = array();
 		switch ( Gdn::Dispatcher()->ControllerMethod() )
 		{
@@ -274,6 +258,9 @@ class VanillaSEOPlugin extends Gdn_Plugin
 		if ( $page <= 0 )
 			$page = 1;
 		
+		array_walk($tags, 'strip_tags');
+		array_walk($tags, 'trim');
+		array_walk($tags, 'htmlspecialchars');
 		$tags = array_unique($tags);
 		if ( count($tags) > 0 )
 		{
@@ -283,20 +270,11 @@ class VanillaSEOPlugin extends Gdn_Plugin
 		$Sender->Head->AddTag('meta', array('name' => 'description', 'content'=> $Sender->Discussion->Name));
 		
 		$data = array (
-			'discussion' => $Sender->Discussion->Name,
+			'title' => $Sender->Discussion->Name,
 			'category' => $Sender->Discussion->Category,
-			'garden_title' => C('Garden.Title'),
 		);
 		
-		$type = 'single_discussion';
-		
-		// We are on a 2+ page discussion.
-		if ( $page > 1 )
-		{
-			$data['page'] = $page;
-			$type = 'page_discussion';			
-		}
-		
+		$type = 'discussion_single';		
 		$this->ParseTitle($Sender, $data, $type);
 	}
 	
