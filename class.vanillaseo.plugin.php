@@ -26,22 +26,22 @@ class VanillaSEOPlugin extends Gdn_Plugin
 					'default' 	=> 'All Categories on %garden%',
 					'fields'	=> array('garden'),
 					'name'		=> 'All Categories',
-					'info'		=> 'Page where all categories are.'
-					// Example: /categories/all
+					'info'		=> 'Page where all categories are.',
+					'examples'	=> array('/categories/all')
 		),
 		'category_single'		=>	array(
 					'default' 	=> '%category% Discussions on %garden%',
 					'fields'	=> array('garden', 'category'),
 					'name'		=> 'Single Category page',
-					'info'		=> 'Category view displaying relevent discussions.'
-					// Example: /categories/general-forum, /categories/general-forum/p2, /categories/general-forum/feed.rss
+					'info'		=> 'Category view displaying relevent discussions.',
+					'examples'	=> array('/categories/general-forum', '/categories/general-forum/p2', '/categories/general-forum/feed.rss')
 		),
 		'category_discussions'	=>	array(
 					'default' 	=> 'View Discussions and Categories on %garden%',
 					'fields'	=> array('garden'),
 					'name'		=> 'Sample Categories',
-					'info'		=> 'Showing all categories and a few discussions from each category.'
-					// Example: /categories
+					'info'		=> 'Showing all categories and a few discussions from each category.',
+					'examples'	=> array('/categories')
 		),		
 		
 		// ACTIVITY
@@ -49,8 +49,8 @@ class VanillaSEOPlugin extends Gdn_Plugin
 					'default'	=> 'Recent Activity on %garden%',
 					'fields'	=> array('garden'),
 					'name'		=> 'Recent Activity',
-					'info'		=> 'Page listing recent activity on your vanilla forum.'
-					// Example:	/activity
+					'info'		=> 'Page listing recent activity on your vanilla forum.',
+					'examples'	=> array('/activity')
 		),		
 		
 		// DISCUSSIONS
@@ -58,16 +58,16 @@ class VanillaSEOPlugin extends Gdn_Plugin
 					'default'	=> 'Recent Discussions on %garden%',
 					'fields'	=> array('garden'),
 					'name'		=> 'Discussions Home Page',
-					'info'		=> 'Page listing recent discussions on your vanilla forum.'
-					// Example:	/discussions
+					'info'		=> 'Page listing recent discussions on your vanilla forum.',
+					'examples'	=>	array('/discussions')
 		),
 		
 		'discussion_single'		=> array(
 					'default'	=> '%title% - %category% Discussions on %garden%',
 					'fields'	=> array('garden', 'title', 'category'),
 					'name'		=> 'Single Discussion Page',
-					'info'		=> 'Viewing a single discussion thread.'
-					// Example: /discussions/23/this-is-a-post-title
+					'info'		=> 'Viewing a single discussion thread.',
+					'examples'	=> array('/discussions/23/this-is-a-post-title')
 		)
 	);
 
@@ -169,6 +169,12 @@ class VanillaSEOPlugin extends Gdn_Plugin
 				{
 					$type = 'category_single';
 					$data['category'] = $Sender->Category->Name;
+					
+					// Add meta description if one is available
+					if ( isset($Sender->Category->Description) )
+					{
+						$Sender->Head->AddTag('meta', array('name' => 'description', 'content'=> htmlspecialchars($Sender->Category->Description)));	
+					}
 				}
 				else
 				{
