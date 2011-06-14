@@ -1,14 +1,11 @@
-Simply drop the VanillaSEO into your vanilla plugin's directory and enable in control panel.
+Vanilla SEO (Search Engine Optimization)
+----------------------------------------
 
-GUI interface is being worked up so that you can edit these configurable items from the backend instead of silly "editing in the php file".
+Simply drop the VanillaSEO directory into your vanilla forum's plugin directory and enable in dashboard.
+
+Navigate to built in administration interface which can be found under Settings -> Search Engine Optimization. You can edit these configurable items from the backend instead of  "editing in the php file" like most other traditional vanilla plugins.
 
 Official support for this plugin: https://github.com/JamieChung/VanillaSEO
-
-TODO
-Paged Categories
-Paged Discussions /discussions/p2
-Paged Bookmarks
-Paged My Discussions
 
 Copyright
 Jamie Chung
