@@ -120,7 +120,7 @@ class VanillaSEOPlugin extends Gdn_Plugin
 			{
 				foreach ( $this->dynamic_titles as $field => $info )
 				{
-					SaveToConfig('Plugins.SEO.DynamicTitles.'.$field, $Sender->Form->GetValue($field));
+					SaveToConfig('Plugins.SEO.DynamicTitles.'.$field, htmlspecialchars(addslashes($Sender->Form->GetValue($field))));
 				}
 				
 				$Sender->StatusMessage = T('Your settings have been saved.');
