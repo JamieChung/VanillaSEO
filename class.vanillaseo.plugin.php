@@ -23,28 +23,47 @@ class VanillaSEOPlugin extends Gdn_Plugin
 		
 		// CATEGORIES
 		'categories_all'		=>	array(
-					'default' 	=> 'ALL_CAT',
+					'default' 	=> 'All Categories on %garden%',
 					'fields'	=> array('garden'),
 					'name'		=> 'All Categories',
 					'info'		=> 'Page where all categories are.'
+					// Example: /categories/all
 		),
 		'category_single'		=>	array(
-					'default' 	=> 'ALL_CAT',
+					'default' 	=> '%category% Discussions on %garden%',
 					'fields'	=> array('garden', 'category'),
-					'name'		=> 'Single-Paged Category',
-					'info'		=> 'First page of a category view.'
+					'name'		=> 'Single Category page',
+					'info'		=> 'Category view displaying relevent discussions.'
+					// Example: /categories/general-forum, /categories/general-forum/p2, /categories/general-forum/feed.rss
 		),
-		'category_paged'		=>	array(
-					'default' 	=> 'ALL_CAT',
-					'fields'	=> array('garden'),
-					'name'		=> 'Paged Category',
-					'info'		=> 'Viewing discussions on additional pages of gategories.'
-		),
+		// 'category_paged'		=>	array(
+					// 'default' 	=> '%category% Discussions on Page %page of %garden%',
+					// 'fields'	=> array('garden', 'page'),
+					// 'name'		=> 'Paged Category',
+					// 'info'		=> 'Viewing discussions on additional pages of gategories.'
+		// ),
 		'category_discussions'	=>	array(
-					'default' 	=> 'ALL_CAT',
+					'default' 	=> 'View Discussions and Categories on %garden%',
 					'fields'	=> array('garden'),
-					'name'		=> 'All Categories',
+					'name'		=> 'Sample Categories',
 					'info'		=> 'Showing all categories and a few discussions from each category.'
+					// Example: /categories
+		),
+		
+		'activity'				=> array(
+					'default'	=> 'Recent Activity on %garden%',
+					'fields'	=> array('garden'),
+					'name'		=> 'Recent Activity',
+					'info'		=> 'Page listing recent activity on your vanilla forum.'
+					// Example:	/activity
+		),
+		
+		'discussions'			=> array(
+					'default'	=> 'Recent Discussions on %garden%',
+					'fields'	=> array('garden'),
+					'name'		=> 'Discussions Home Page',
+					'info'		=> 'Page listing recent discussions on your vanilla forum.'
+					// Example:	/activity
 		),
 	);
 
@@ -84,7 +103,7 @@ class VanillaSEOPlugin extends Gdn_Plugin
 	{
 		if ( C('Plugins.SEO.DynamicTitles.'.$type) )
 		{
-			return C('Plugins.SEO.DynamicTitles.'.$type);
+			return stripslashes(strip_tags(C('Plugins.SEO.DynamicTitles.'.$type)));
 		}
 		else
 		{
@@ -153,6 +172,11 @@ class VanillaSEOPlugin extends Gdn_Plugin
 		redirect('plugin/seo');
 	}
 	
+	public function PagerModule_GetOffset_Create ( $Sender )
+	{
+		return $Sender->Offset;
+	}
+	
 	public function CategoriesController_Render_Before ( $Sender )
 	{
 		$data = array();
@@ -187,15 +211,18 @@ class VanillaSEOPlugin extends Gdn_Plugin
 		$data = array();
 		switch ( Gdn::Dispatcher()->ControllerMethod() )
 		{
+			// We don't need these personal pages yet because no Search Engines visit them.
+			/*
 			case 'mine':
 				$type = 'my_discussions';
 				break;
 			case 'bookmarked':
 				$type = 'bookmarked_discussions';		
 				break;
+			*/
 			
 			case 'index':
-				$type = 'home_discussions';
+				$type = 'discussions';
 				break;
 		}
 		$this->ParseTitle($Sender, $data, $type );
