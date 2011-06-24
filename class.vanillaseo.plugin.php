@@ -4,7 +4,8 @@ $PluginInfo['VanillaSEO'] = array (
  	'Name'					=>	'Vanilla SEO',
 	'Description'			=>	'Vanilla SEO is your all in one plugin for optimizing your Vanilla forum for search engines.',
 	'Version'				=>	'0.1',
-	'RequiredPlugins'		=>	array('Vanilla' => '>=2'),
+	'RequiredApplications'	=>	array('Vanilla' => '2.0'),
+	'RequiredPlugins'		=>	FALSE,
 	'HasLocale'				=>	FALSE,
 	'SettingsUrl'			=>	'/dashboard/plugin/seo',
 	'SettingsPermission'	=>	'Garden.Settings.Manage',
@@ -152,7 +153,8 @@ class VanillaSEOPlugin extends Gdn_Plugin
 	public function PagerModule_GetOffset_Create ( $Sender )
 	{
 		return $Sender->Offset;
-	}*/
+	}
+	*/
 	
 	public function CategoriesController_Render_Before ( $Sender )
 	{
