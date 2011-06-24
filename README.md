@@ -22,6 +22,7 @@ Custom Page Titles on:
 Current Feature Requests
 -----------
 - Add meta keywords based on category.
+- Add meta descriptions based on category.
 - Add support for page number in titles. (Add %page% to certain titles)
 
 Installation

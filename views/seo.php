@@ -1,6 +1,6 @@
 <?php if (!defined('APPLICATION')) exit(); ?>
 <h1><?php echo T($this->Data['Title']); ?></h1>
-<div class="Info">Customize your Vanilla Forum installation with many SEO tweeks. Change the page title, meta descriptions and keywords.</div>
+<div class="Info">Customize your Vanilla Forum installation with many SEO tweeks. Change the page title on various pages to better reflect the discussions on your vanilla forum.</div>
 <div class="FilterMenu">
 	<?php
 		$ToggleName = C('Plugins.SEO.Enabled') ? T('Disable Search Engine Optimization') : T('Enable Search Engine Optimization');
