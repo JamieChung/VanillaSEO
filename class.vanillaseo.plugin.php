@@ -3,7 +3,7 @@
 $PluginInfo['VanillaSEO'] = array (
  	'Name'					=>	'Vanilla SEO',
 	'Description'			=>	'Vanilla SEO is your all in one plugin for optimizing your Vanilla forum for search engines.',
-	'Version'				=>	'0.1',
+	'Version'				=>	'0.2',
 	'RequiredApplications'	=>	array('Vanilla' => '2.0'),
 	'RequiredPlugins'		=>	FALSE,
 	'HasLocale'				=>	FALSE,
@@ -17,7 +17,12 @@ $PluginInfo['VanillaSEO'] = array (
 class VanillaSEOPlugin extends Gdn_Plugin 
 {
 	// All available %tags%.
-	public $tags = array ( 'title' => 'Discussion Title', 'category' => 'Category Name', 'garden' => 'Vanilla Banner Title' );
+	public $tags = array (
+		'title'			=>	'Discussion Title',
+		'category'		=>	'Category Name',
+		'garden'		=>	'Vanilla Banner Title',
+		'search'		=>	'Search Query'
+	);
 	
 	// Default titles for each part of the vanilla rewrite scheme.
 	public $dynamic_titles = array (
@@ -61,22 +66,30 @@ class VanillaSEOPlugin extends Gdn_Plugin
 					'name'		=> 'Discussions Home Page',
 					'info'		=> 'Page listing recent discussions on your vanilla forum.',
 					'examples'	=>	array('/discussions')
-		),
-		
+		),		
 		'discussion_single'		=> array(
 					'default'	=> '%title% - %category% Discussions on %garden%',
 					'fields'	=> array('garden', 'title', 'category'),
 					'name'		=> 'Single Discussion Page',
 					'info'		=> 'Viewing a single discussion thread.',
 					'examples'	=> array('/discussions/23/this-is-a-post-title')
-		)
+		),
+			
+		// SEARCH
+		'search_results'		=> array(
+					'default'	=> '%search% - Search Results on %garden%',
+					'fields'	=> array('garden', 'search'),
+					'name'		=> 'Search Results Page',
+					'info'		=> 'Adds the search query in the page title of search results pages.',
+					'examples'	=>	array('/search?Search=hello+world')
+		),
 	);
 
  	private function GetTitle ( $type )
 	{
 		if ( C('Plugins.SEO.DynamicTitles.'.$type) )
 		{
-			return stripslashes(strip_tags(base64_decode(C('Plugins.SEO.DynamicTitles.'.$type))));
+			return strip_tags(C('Plugins.SEO.DynamicTitles.'.$type));
 		}
 		else
 		{
@@ -96,9 +109,6 @@ class VanillaSEOPlugin extends Gdn_Plugin
 		$Sender->Permission('Garden.Settings.Manage');
 		$Sender->Title(T('Search Engine Optimization'));
 		$Sender->AddSideMenu('plugin/seo');
-		
-		$Sender->Form = new Gdn_Form();
-		
 		$this->Dispatch($Sender, $Sender->RequestArgs);
 	}
 	
@@ -114,7 +124,7 @@ class VanillaSEOPlugin extends Gdn_Plugin
 			{
 				foreach ( $this->dynamic_titles as $field => $info )
 				{
-					SaveToConfig('Plugins.SEO.DynamicTitles.'.$field, base64_encode($Sender->Form->GetValue($field)));
+					SaveToConfig('Plugins.SEO.DynamicTitles.'.$field, $Sender->Form->GetValue($field));
 				}
 				
 				$Sender->StatusMessage = T('Your settings have been saved.');
@@ -195,6 +205,21 @@ class VanillaSEOPlugin extends Gdn_Plugin
 			return;
 		
 		$this->ParseTitle($Sender, '', 'activity');
+	}
+	
+	public function SearchController_Render_Before ( $Sender )
+	{
+		if ( !$this->Enabled() )
+			return;
+		
+		
+		$Search = Gdn_Format::Text($Sender->Form->GetFormValue('Search'));
+		
+		// No search term? No page title.
+		if ( strlen($Search) == 0 ) return;
+		
+		$data['search'] = $Search;		
+		$this->ParseTitle($Sender, $data, 'search_results');
 	}
 	
 	public function DiscussionsController_Render_Before ( $Sender )

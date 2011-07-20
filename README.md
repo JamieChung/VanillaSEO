@@ -1,9 +1,9 @@
 Vanilla SEO (Search Engine Optimization)
 =======================================
 
-Latest Version: 0.1 (June.14.2011)
+Latest Version: 0.2 (July.20.2011)
 -----------
-- Take back control of your Vanilla's SEO with VanillaSEO.
+- Take back control of your Vanilla's SEO (Search Engine Optimization) with VanillaSEO.
 - Edit page titles in order to provide your visitors better information about what is being displayed.
 - Give your RSS Feeds life with relevent descriptions and titles.
 - No more generic and plain page title's on your Vanilla Forum.
@@ -18,6 +18,7 @@ Custom Page Titles on:
 - Discussion Listings
 - Discussion Threads
 - Activity Page
+- Search Results Pages
 
 Current Feature Requests
 -----------
@@ -42,6 +43,11 @@ Get Support and Make Contributions
 
 ChangeLog
 -----------
+### 0.2 (July.20.2011)
+- New initial public release.
+- Added help stickies in SEO dashboard so users can get assistance.
+- Added support for search results pages.
+
 ### 0.1 (June.14.2011)
 - Initial Public Release
 - Default titles provided for multiple types of pages (discussions, category, home discussion, activity).
@@ -51,7 +57,7 @@ ChangeLog
 
 ==============================
 
-Copyright 2011
+Copyright &copy; 2011
 
 Jamie Chung
 
