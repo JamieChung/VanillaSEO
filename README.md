@@ -1,11 +1,12 @@
+
 Vanilla SEO (Search Engine Optimization)
 =======================================
 
 Latest Version: 0.2 (July.20.2011)
 -----------
-- Take back control of your Vanilla's SEO (Search Engine Optimization) with VanillaSEO.
+- Take back control of your Vanilla's SEO (Search Engine Optimization) with Vanilla SEO.
 - Edit page titles in order to provide your visitors better information about what is being displayed.
-- Give your RSS Feeds life with relevent descriptions and titles.
+- Give your RSS Feeds life with relevant descriptions and titles.
 - No more generic and plain page title's on your Vanilla Forum.
 - Add keywords to your page titles to get better results from Search Engines.
 - Guided administration interface to help you get setup within minutes.
@@ -28,24 +29,24 @@ Current Feature Requests
 
 Installation
 -----------
-1. Simply drop the VanillaSEO directory into your vanilla forum's plugin directory and enable in dashboard.
+1. Simply drop the “VanillaSEO” directory into your vanilla forum's plugin directory and enable in dashboard.
 
-2. Navigate to built in administration interface which can be found under Settings -> Search Engine Optimization.
+2. Navigate to the built in administration interface which can be found under Settings -> Search Engine Optimization.
 
 > You can edit these configurable items from the backend instead of "editing in the php file" like most other traditional vanilla plugins.
 
 
 Get Support and Make Contributions
 -----------
-- Fork a copy and make contributinos: https://github.com/JamieChung/VanillaSEO
+- Fork a copy and make contributions: https://github.com/JamieChung/VanillaSEO
 - Get support on twitter: http://www.twitter.com/jamiechung
 
 
-ChangeLog
+Change Log
 -----------
 ### 0.2 (July.20.2011)
 - New initial public release.
-- Added help stickies in SEO dashboard so users can get assistance.
+- Added yellow help stickies in SEO dashboard so users can get assistance.
 - Added support for search results pages.
 
 ### 0.1 (June.14.2011)
