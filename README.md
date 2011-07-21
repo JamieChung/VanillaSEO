@@ -1,4 +1,3 @@
-
 Vanilla SEO (Search Engine Optimization)
 =======================================
 
