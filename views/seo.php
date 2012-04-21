@@ -1,14 +1,14 @@
 <?php if (!defined('APPLICATION')) exit(); ?>
 
 <div class="Help Aside">
-	<h2>Need More Help?</h2>
+	<h2><?php echo T('Need More Help?'); ?></h2>
 	<ul>
 		<li>Follow <a href="http://www.twitter.com/jamiechung">@jamiechung</a> on Twitter</li>
 		<li>Visit the <a href="https://github.com/JamieChung/VanillaSEO">Github</a> repo and send <a href="https://github.com/JamieChung">@JamieChung</a> a message!</li>
 		<li><a href="http://vanillaforums.org/discussions">Ask a question</a> on the Vanilla Forum</li>
 	</ul>
 	<br />
-	<h2>Have Feedback?</h2>
+	<h2><?php echo T('Have Feedback?'); ?></h2>
 	<ul>
 		<li>Visit the <a href="https://github.com/JamieChung/VanillaSEO">Github</a> repo. Voice your concerns, comments and suggestions.</li>
 	</ul>
@@ -51,9 +51,9 @@
 	<thead>
 		<tr>
 			<th><?php echo T('Dynamic Page Title'); ?></th>
-			<th>Custom Title</th>
-			<th>Parsed Tags &amp; Examples</th>
-			<th>Plugin Default</th>
+			<th><?php echo T('Custom Title'); ?></th>
+			<th><?php echo T('Parsed Tags & Examples'); ?></th>
+			<th><?php echo T('Plugin Default'); ?></th>
 		</tr>
 	</thead>
 	<tbody>

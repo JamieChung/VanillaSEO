@@ -302,20 +302,54 @@ class VanillaSEOPlugin extends Gdn_Plugin
 		array_walk($tags, 'trim');
 		array_walk($tags, 'htmlspecialchars');
 		$tags = array_unique($tags);
+
 		if ( count($tags) > 0 )
 		{
 			$Sender->Head->AddTag('meta', array('name' => 'keywords', 'content' => implode(', ', $tags)));
 		}		
 		
-		$Sender->Head->AddTag('meta', array('name' => 'description', 'content'=> $Sender->Discussion->Name));
+		$PageNum = ($Sender->Pager->Offset / $Sender->Pager->Limit) + 1;
+
+		if ( $PageNum > 1 )
+		{
+			$CommentData = $Sender->Data('CommentData')->Result();
+			$Description = strip_tags($CommentData[0]->Body);
+		}
+		else
+		{
+			$Description = strip_tags($Sender->Data('Discussion.Body'));
+		}
+
+		if ( strlen($Description) == 0 )
+		{
+			$Description = $Sender->Data('Discussion.Name');
+		}
+		else
+		{
+			$Description = explode(' ', $Description);
+			array_Walk($Description, 'strip_tags');
+			array_walk($Description, 'trim');
+
+			foreach ( $Description as $k => $v )
+			{
+				if ( strlen($v) < 3 )
+				{
+					unset($Discussion[$k]);
+				}
+			}
+
+			$Description = array_slice($Description, 0, 40);
+			$Description = implode(' ', $Description);
+		}
+
+		$Sender->Head->AddTag('meta', array('name' => 'description', 'content'=> $Description));
 		
 		$data = array (
-			'title' => $Sender->Discussion->Name,
+			'title' => ( $PageNum == 1 ) ? $Sender->Discussion->Name : $Sender->Discussion->Name .' - Page '.$PageNum,
 			'category' => $Sender->Discussion->Category,
 		);
 		
-		$type = 'discussion_single';		
-		$this->ParseTitle($Sender, $data, $type);
+		$this->ParseTitle($Sender, $data, 'discussion_single');
 	}
 	
 	public function Setup ()
