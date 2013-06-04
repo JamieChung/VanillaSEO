@@ -3,8 +3,8 @@
 $PluginInfo['VanillaSEO'] = array (
  	'Name'					=>	'Vanilla SEO',
 	'Description'			=>	'Vanilla SEO is your all in one plugin for optimizing your Vanilla forum for search engines.',
-	'Version'				=>	'0.2',
-	'RequiredApplications'	=>	array('Vanilla' => '2.0'),
+	'Version'				=>	'0.2.1',
+	'RequiredApplications'	=>	array('Vanilla' => '2.0.18'),
 	'RequiredPlugins'		=>	FALSE,
 	'HasLocale'				=>	FALSE,
 	'SettingsUrl'			=>	'/dashboard/plugin/seo',
@@ -181,12 +181,13 @@ class VanillaSEOPlugin extends Gdn_Plugin
 				if ( isset($Sender->Data['Category']) )
 				{
 					$type = 'category_single';
-					$data['category'] = $Sender->Category->Name;
+					$data['category'] = $Sender->Data('Category.Name');
 					
 					// Add meta description if one is available
-					if ( isset($Sender->Category->Description) )
+               $CategoryDescription = $Sender->Data('Category.Description', NULL);
+					if ( !is_null($CategoryDescription) )
 					{
-						$Sender->Head->AddTag('meta', array('name' => 'description', 'content'=> htmlspecialchars($Sender->Category->Description)));	
+						$Sender->Head->AddTag('meta', array('name' => 'description', 'content'=> htmlspecialchars($CategoryDescription)));	
 					}
 				}
 				else
@@ -282,10 +283,11 @@ class VanillaSEOPlugin extends Gdn_Plugin
 			
 		$tags = array();
 		
-		// Check if we have tags from current discussion.
-		if ( C('Plugins.Tagging.Enabled') && isset($Sender->Discussion->Tags) )
+		// Check if we have tags from current discussion
+      $DiscussionTags = $Sender->Data('Discussion.Tags', NULL);
+		if ( C('Plugins.Tagging.Enabled') && !is_null($DiscussionTags) )
 		{
-			$tags += explode(' ', $Sender->Discussion->Tags);
+			$tags += explode(' ', $DiscussionTags);
 		}
 		
 		// Calculate Page for Single discussion.
@@ -302,54 +304,20 @@ class VanillaSEOPlugin extends Gdn_Plugin
 		array_walk($tags, 'trim');
 		array_walk($tags, 'htmlspecialchars');
 		$tags = array_unique($tags);
-
 		if ( count($tags) > 0 )
 		{
 			$Sender->Head->AddTag('meta', array('name' => 'keywords', 'content' => implode(', ', $tags)));
 		}		
 		
-		$PageNum = ($Sender->Pager->Offset / $Sender->Pager->Limit) + 1;
-
-		if ( $PageNum > 1 )
-		{
-			$CommentData = $Sender->Data('CommentData')->Result();
-			$Description = strip_tags($CommentData[0]->Body);
-		}
-		else
-		{
-			$Description = strip_tags($Sender->Data('Discussion.Body'));
-		}
-
-		if ( strlen($Description) == 0 )
-		{
-			$Description = $Sender->Data('Discussion.Name');
-		}
-		else
-		{
-			$Description = explode(' ', $Description);
-			array_Walk($Description, 'strip_tags');
-			array_walk($Description, 'trim');
-
-			foreach ( $Description as $k => $v )
-			{
-				if ( strlen($v) < 3 )
-				{
-					unset($Discussion[$k]);
-				}
-			}
-
-			$Description = array_slice($Description, 0, 40);
-			$Description = implode(' ', $Description);
-		}
-
-		$Sender->Head->AddTag('meta', array('name' => 'description', 'content'=> $Description));
+		$Sender->Head->AddTag('meta', array('name' => 'description', 'content'=> $Sender->Data('Discussion.Name')));
 		
 		$data = array (
-			'title' => ( $PageNum == 1 ) ? $Sender->Discussion->Name : $Sender->Discussion->Name .' - Page '.$PageNum,
-			'category' => $Sender->Discussion->Category,
+			'title' => $Sender->Data('Discussion.Name'),
+			'category' => $Sender->Data('Discussion.Category'),
 		);
 		
-		$this->ParseTitle($Sender, $data, 'discussion_single');
+		$type = 'discussion_single';		
+		$this->ParseTitle($Sender, $data, $type);
 	}
 	
 	public function Setup ()
