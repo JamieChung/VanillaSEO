@@ -1,17 +1,17 @@
 <?php
 
 $PluginInfo['VanillaSEO'] = array (
-	'Name'				=>	'Vanilla SEO',
-	'Description'			=>	'Vanilla SEO is your all in one plugin for optimizing your Vanilla forum for search engines.',
-	'Version'			=>	'0.2.1',
-	'RequiredApplications'		=>	array('Vanilla' => '2.0.18'),
-	'RequiredPlugins'		=>	FALSE,
-	'HasLocale'			=>	FALSE,
-	'SettingsUrl'			=>	'/dashboard/plugin/seo',
-	'SettingsPermission'		=>	'Garden.Settings.Manage',
-	'Author'			=>	'Jamie Chung',
-	'AuthorEmail'			=>	'me@jamiechung.me',
-	'AuthorUrl'			=>	'http://www.jamiechung.me'
+	'Name' => 'Vanilla SEO',
+	'Description' => 'Vanilla SEO is your all in one plugin for optimizing your Vanilla forum for search engines.',
+	'Version' =>	'0.2.1',
+	'RequiredApplications' => array('Vanilla' => '2.0.18'),
+	'RequiredPlugins' => FALSE,
+	'HasLocale' => FALSE,
+	'SettingsUrl' => '/dashboard/plugin/seo',
+	'SettingsPermission' => 'Garden.Settings.Manage',
+	'Author' => 'Jamie Chung',
+	'AuthorEmail' => 'me@jamiechung.me',
+	'AuthorUrl' => 'http://www.jamiechung.me'
 );
 
 class VanillaSEOPlugin extends Gdn_Plugin
@@ -157,15 +157,6 @@ class VanillaSEOPlugin extends Gdn_Plugin
 		redirect('plugin/seo');
 	}
 
-	/**
-	 * We don't have a way to publically get the offset from the PagerModule.
-	 * Will go without for now.
-	public function PagerModule_GetOffset_Create ( $Sender )
-	{
-		return $Sender->Offset;
-	}
-	*/
-
 	public function CategoriesController_Render_Before ( $Sender )
 	{
 		if ( !$this->Enabled() )
@@ -184,7 +175,7 @@ class VanillaSEOPlugin extends Gdn_Plugin
 					$data['category'] = $Sender->Data('Category.Name');
 
 					// Add meta description if one is available
-               $CategoryDescription = $Sender->Data('Category.Description', NULL);
+					$CategoryDescription = $Sender->Data('Category.Description', NULL);
 					if ( !is_null($CategoryDescription) )
 					{
 						$Sender->Head->AddTag('meta', array('name' => 'description', 'content'=> htmlspecialchars($CategoryDescription)));
@@ -213,7 +204,6 @@ class VanillaSEOPlugin extends Gdn_Plugin
 		if ( !$this->Enabled() )
 			return;
 
-
 		$Search = Gdn_Format::Text($Sender->Form->GetFormValue('Search'));
 
 		// No search term? No page title.
@@ -231,16 +221,6 @@ class VanillaSEOPlugin extends Gdn_Plugin
 		$data = array();
 		switch ( Gdn::Dispatcher()->ControllerMethod() )
 		{
-			// We don't need these personal pages yet because no Search Engines visit them.
-			/*
-			case 'mine':
-				$type = 'my_discussions';
-				break;
-			case 'bookmarked':
-				$type = 'bookmarked_discussions';
-				break;
-			*/
-
 			case 'index':
 			default:
 				$type = 'discussions';
@@ -289,16 +269,6 @@ class VanillaSEOPlugin extends Gdn_Plugin
 		{
 			$tags += explode(' ', $DiscussionTags);
 		}
-
-		// Calculate Page for Single discussion.
-		/*
-		 * No need for calculating pages since we aren't doing titles for multiple pages.
-		$Offset = (int) $Sender->Offset;
-		$Limit = (int) C('Vanilla.Comments.PerPage', 50);
-		$page = (int) PageNumber($Offset, $Limit);
-		if ( $page <= 0 )
-			$page = 1;
-		*/
 
 		array_walk($tags, 'strip_tags');
 		array_walk($tags, 'trim');
