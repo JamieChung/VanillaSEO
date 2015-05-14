@@ -5,7 +5,7 @@ Latest Version: 0.3 (May.13.2015)
 -----------
 - Take back control of your Vanilla's SEO (Search Engine Optimization) with VanillaSEO.
 - Edit page titles in order to provide your visitors better information about what is being displayed.
-- Give your RSS Feeds life with relevent descriptions and titles.
+- Give your RSS Feeds life with relevant descriptions and titles.
 - No more generic and plain page title's on your Vanilla Forum.
 - Add keywords to your page titles to get better results from Search Engines.
 - Guided administration interface to help you get setup within minutes.
