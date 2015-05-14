@@ -1,7 +1,7 @@
 Vanilla SEO (Search Engine Optimization)
 =======================================
 
-Latest Version: 0.2 (July.20.2011)
+Latest Version: 0.3 (May.13.2015)
 -----------
 - Take back control of your Vanilla's SEO (Search Engine Optimization) with VanillaSEO.
 - Edit page titles in order to provide your visitors better information about what is being displayed.
