@@ -17,7 +17,8 @@ Custom Page Titles on:
 - Category Listings
 - Discussion Listings
 - Discussion Threads
-- Activity Page
+- Tagged Discussion Pages
+- Activity Pages
 - Search Results Pages
 
 Current Feature Requests
@@ -43,6 +44,10 @@ Get Support and Make Contributions
 
 ChangeLog
 -----------
+### 0.3 (May.13.2015)
+- Added support for setting the page title on tagged discussion pages.
+- Fixed bug with older version of Vanilla where Tagging plugin was not properly detected.
+
 ### 0.2 (July.20.2011)
 - New initial public release.
 - Added help stickies in SEO dashboard so users can get assistance.

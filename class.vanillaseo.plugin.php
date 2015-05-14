@@ -3,8 +3,8 @@
 $PluginInfo['VanillaSEO'] = array (
 	'Name' => 'Vanilla SEO',
 	'Description' => 'Vanilla SEO is your all in one plugin for optimizing your Vanilla forum for search engines.',
-	'Version' =>	'0.2.1',
-	'RequiredApplications' => array('Vanilla' => '2.0.18'),
+	'Version' =>	'0.3.0',
+	'RequiredApplications' => array('Vanilla' => '2.1.0'),
 	'RequiredPlugins' => FALSE,
 	'HasLocale' => FALSE,
 	'SettingsUrl' => '/dashboard/plugin/seo',
@@ -21,7 +21,8 @@ class VanillaSEOPlugin extends Gdn_Plugin
 		'title'			=>	'Discussion Title',
 		'category'		=>	'Category Name',
 		'garden'		=>	'Vanilla Banner Title',
-		'search'		=>	'Search Query'
+		'search'		=>	'Search Query',
+		'tag'			=>  'Tag'
 	);
 
 	// Default titles for each part of the vanilla rewrite scheme.
@@ -74,7 +75,16 @@ class VanillaSEOPlugin extends Gdn_Plugin
 					'info'		=> 'Viewing a single discussion thread.',
 					'examples'	=> array('/discussions/23/this-is-a-post-title')
 		),
-
+		
+		// TAGGED DISCUSSIONS
+		'tagged'		=> array(
+					'default'	=> 'Tagged with "%tag" on %garden%',
+					'fields'	=> array('garden', 'tag'),
+					'name'		=> 'Tagged Discussions Page',
+					'info'		=> 'Discussions tagged with a specific tag.',
+					'examples'	=> array('/discussions/tagged/vanilla')
+		),
+		
 		// SEARCH
 		'search_results'		=> array(
 					'default'	=> '%search% - Search Results on %garden%',
@@ -219,13 +229,20 @@ class VanillaSEOPlugin extends Gdn_Plugin
 			return;
 
 		$data = array();
+		
 		switch ( Gdn::Dispatcher()->ControllerMethod() )
 		{
+			case 'tagged':
+				$type = 'tagged';
+				$data['tag'] = $Sender->Data('Tag');
+				break;
+				
 			case 'index':
 			default:
 				$type = 'discussions';
 				break;
 		}
+		
 		$this->ParseTitle($Sender, $data, $type );
 	}
 
@@ -264,16 +281,18 @@ class VanillaSEOPlugin extends Gdn_Plugin
 		$tags = array();
 
 		// Check if we have tags from current discussion
-      $DiscussionTags = $Sender->Data('Discussion.Tags', NULL);
-		if ( C('Plugins.Tagging.Enabled') && !is_null($DiscussionTags) )
+		$DiscussionTags = $Sender->Data('Discussion.Tags', NULL);
+		if ( C('EnabledPlugins.Tagging') )
 		{
+			$tags += explode(',', $DiscussionTags);
 			$tags += explode(' ', $DiscussionTags);
 		}
-
+		
 		array_walk($tags, 'strip_tags');
 		array_walk($tags, 'trim');
 		array_walk($tags, 'htmlspecialchars');
 		$tags = array_unique($tags);
+		
 		if ( count($tags) > 0 )
 		{
 			$Sender->Head->AddTag('meta', array('name' => 'keywords', 'content' => implode(', ', $tags)));
@@ -285,7 +304,7 @@ class VanillaSEOPlugin extends Gdn_Plugin
 			'title' => $Sender->Data('Discussion.Name'),
 			'category' => $Sender->Data('Discussion.Category'),
 		);
-
+		
 		$type = 'discussion_single';
 		$this->ParseTitle($Sender, $data, $type);
 	}
