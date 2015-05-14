@@ -78,7 +78,7 @@ class VanillaSEOPlugin extends Gdn_Plugin
 		
 		// TAGGED DISCUSSIONS
 		'tagged'		=> array(
-					'default'	=> 'Tagged with "%tag" on %garden%',
+					'default'	=> 'Tagged with "%tag%" on %garden%',
 					'fields'	=> array('garden', 'tag'),
 					'name'		=> 'Tagged Discussions Page',
 					'info'		=> 'Discussions tagged with a specific tag.',
